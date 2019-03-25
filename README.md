@@ -5,6 +5,7 @@ This is a collection of Docker images to help us test while writing documentatio
 
 -----
 
-Each IRCd has its own ports, with plaintext at 4*** and TLS at 5***. Here's the port numbers:
+To use, install [Docker](https://www.docker.com/get-started) and then run one of these commands:
 
-- 4441/5551: UnrealIRCd 4.
+    # UnrealIRCd 4 - port 4441
+    $ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/unreal4:latest
