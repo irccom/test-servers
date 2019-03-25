@@ -1,0 +1,220 @@
+diff --git a/doc/conf/examples/example.conf b/doc/conf/examples/example.conf
+index 57a6c79e..d2afa86f 100644
+--- a/doc/conf/examples/example.conf
++++ b/doc/conf/examples/example.conf
+@@ -57,18 +57,18 @@ include "operclass.default.conf";
+  * have it's own sid).
+  */
+ me {
+-	name "irc.foonet.com";
+-	info "FooNet Server";
+-	sid "001";
++	name "unreal4.example.irc.com";
++	info "UnrealIRCd 4 Test Server";
++	sid "422";
+ };
+ 
+ /* The admin { } block defines what users will see if they type /ADMIN.
+  * It normally contains information on how to contact the administrator.
+  */
+ admin {
+-	"Bob Smith";
+-	"bob";
+-	"widely@used.name";
++	"Daniel IRC";
++	"danirc";
++	"danirc@example.com";
+ };
+ 
+ /* Clients and servers are put in class { } blocks, we define them here.
+@@ -120,17 +120,6 @@ allow {
+ 	maxperip 3;
+ };
+ 
+-/* Example of a special allow block on a specific IP:
+- * Requires users on that IP to connect with a password. If the password
+- * is correct then it permits 20 connections on that IP.
+- */
+-allow {
+-	ip *@192.0.2.1;
+-	class clients;
+-	password "somesecretpasswd";
+-	maxperip 20;
+-};
+-
+ /* Oper blocks define your IRC Operators.
+  * IRC Operators are people who have "extra rights" compared to others,
+  * for example they may /KILL other people, initiate server linking,
+@@ -146,10 +135,10 @@ allow {
+ /* Here is an example oper block for 'bobsmith' with password 'test'.
+  * You MUST change this!!
+  */
+-oper bobsmith {
++oper daniel {
+ 	class opers;
+ 	mask *@*;
+-	password "test";
++	password "password";
+ 	/* Oper permissions are defined in an 'operclass' block.
+ 	 * See https://www.unrealircd.org/docs/Operclass_block
+ 	 * UnrealIRCd ships with a number of default blocks, see
+@@ -157,7 +146,7 @@ oper bobsmith {
+ 	 */
+ 	operclass netadmin;
+ 	swhois "is a Network Administrator";
+-	vhost netadmin.mynet.org;
++	vhost opers.example.irc.com;
+ };
+ 
+ /* Listen blocks define the ports where the server should listen on.
+@@ -178,79 +167,15 @@ oper bobsmith {
+ /* Standard IRC port 6667 */
+ listen {
+ 	ip *;
+-	port 6667;
++	port 4441;
+ };
+ 
+ /* Standard IRC SSL/TLS port 6697 */
+-listen {
++/*listen {
+ 	ip *;
+-	port 6697;
++	port 5551;
+ 	options { ssl; };
+-};
+-
+-/* Special SSL/TLS servers-only port for linking */
+-listen {
+-	ip *;
+-	port 6900;
+-	options { ssl; serversonly; };
+-};
+-
+-/* NOTE: If you are on an IRCd shell with multiple IP's and you use
+- *       the above listen { } blocks then you will likely get an
+- *       'Address already in use' error and the ircd won't start.
+- *       This means you MUST bind to a specific IP instead of '*' like:
+- *       listen { ip 1.2.3.4; port 6667; };
+- *       Of course, replace the IP with the IP that was assigned to you.
+- */
+-
+-/*
+- * Link blocks allow you to link multiple servers together to form a network.
+- * See https://www.unrealircd.org/docs/Tutorial:_Linking_servers
+- */
+-link hub.mynet.org
+-{
+-	incoming {
+-		mask *@something;
+-	};
+-
+-	outgoing {
+-		bind-ip *; /* or explicitly an IP */
+-		hostname hub.mynet.org;
+-		port 6900;
+-		options { ssl; };
+-	};
+-
+-	/* We use the SPKI fingerprint of the other server for authentication.
+-	 * Run './unrealircd spkifp' on the other side to get it.
+-	 * NOTE: requires UnrealIRCd 4.0.16 or later.
+-	 */
+-	password "AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUV=" { spkifp; };
+-
+-	class servers;
+-};
+-
+-/* The link block for services is usually much simpler.
+- * For more information about what Services are,
+- * see https://www.unrealircd.org/docs/Services
+- */
+-link services.mynet.org
+-{
+-	incoming {
+-		mask 127.0.0.1;
+-	};
+-
+-	password "changemeplease";
+-
+-	class servers;
+-};
+-
+-/* U-lines give other servers (even) more power/commands.
+- * If you use services you must add them here.
+- * NEVER put the name of an UnrealIRCd server here!!!
+- */
+-ulines {
+-	services.mynet.org;
+-};
++};*/
+ 
+ /* Here you can add a password for the IRCOp-only /DIE and /RESTART commands.
+  * This is mainly meant to provide a little protection against accidental
+@@ -261,26 +186,6 @@ drpass {
+ 	die "die";
+ };
+ 
+-/* The log block defines what should be logged and to what file.
+- * See also https://www.unrealircd.org/docs/Log_block
+- */
+-
+-/* This is a good default, it logs almost everything */
+-log "ircd.log" {
+-	flags {
+-		oper;
+-		connects;
+-		server-connects;
+-		kills;
+-		errors;
+-		sadmin-commands;
+-		chg-commands;
+-		oper-override;
+-		tkl;
+-		spamfilter;
+-	};
+-};
+-
+ /* With "aliases" you can create an alias like /SOMETHING to send a message to
+  * some user or bot. They are usually used for services.
+  *
+@@ -380,12 +285,12 @@ vhost {
+ 
+ /* Network configuration */
+ set {
+-	network-name 		"MYNet";
+-	default-server 		"irc.mynet.org";
+-	services-server 	"services.mynet.org";
+-	stats-server 		"stats.mynet.org";
+-	help-channel 		"#Help";
+-	hiddenhost-prefix	"Clk";
++	network-name 		"ExampleNet";
++	default-server 		"example.irc.com";
++	services-server 	"services.example.irc.com";
++	stats-server 		"stats.example.irc.com";
++	help-channel 		"#help";
++	hiddenhost-prefix	"Exmpl";
+ 	prefix-quit 		"Quit";
+ 
+ 	/* Cloak keys should be the same at all servers on the network.
+@@ -396,16 +301,16 @@ set {
+ 	 *       UnrealIRCd generate 3 random strings for you.
+ 	 */
+ 	cloak-keys {
+-		"aoAr1HnR6gl3sJ7hVz4Zb7x4YwpW";
+-		"and another one";
+-		"and another one";
++		"1myBAev6FOXbJ7dBa7yxWK2yxO1o5XH8Oal50iMk354k2484t41";
++		"GXEB4tGRsT0oy5XGLl1G4qrinR83gqj6F2xM67elClcB16q7Xbr";
++		"lx1k5myk4B4OThAS8kF1Qgemyy4Hgl0XuC1GJ2D5jI5V556wQ08";
+ 	};
+ };
+ 
+ /* Server specific configuration */
+ 
+ set {
+-	kline-address "set.this.to.email.address"; /* e-mail or URL shown when a user is banned */
++	kline-address "banned@example.irc.com"; /* e-mail or URL shown when a user is banned */
+ 	modes-on-connect "+ixw"; /* when users connect, they will get these user modes */
+ 	modes-on-oper	 "+xwgs"; /* when someone becomes IRCOp they'll get these modes */
+ 	oper-auto-join "#opers"; /* IRCOps are auto-joined to this channel */

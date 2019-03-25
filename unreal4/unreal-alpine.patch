@@ -1,0 +1,13 @@
+diff --git a/src/s_bsd.c b/src/s_bsd.c
+index 79e4c8b3..8af12d8f 100644
+--- a/src/s_bsd.c
++++ b/src/s_bsd.c
+@@ -518,7 +518,7 @@ void init_sys(void)
+     defined(OSXTIGER) || defined(__QNX__)
+ 	(void)setsid();
+ #elif !defined(_WIN32)
+-	(void)setpgrp(0, (int)getpid());
++	(void)setpgrp();
+ #endif
+ 
+ 	init_resolver(1);
