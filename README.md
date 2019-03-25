@@ -11,3 +11,11 @@ To use, install [Docker](https://www.docker.com/get-started) and then run one of
 # UnrealIRCd 4 - port 4441
 $ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/unreal4:latest
 ```
+
+-----
+
+On these images:
+
+- The server name is `<software>.example.irc.com`
+- The default oper creds are `daniel / password`
+- As much as possible uses the default config.
