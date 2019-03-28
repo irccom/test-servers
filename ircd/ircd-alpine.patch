@@ -1,0 +1,11 @@
+--- ircd/s_bsd.c.old	2010-08-14 05:58:46.000000000 +1000
++++ ircd/s_bsd.c	2019-03-28 00:19:14.000000000 +1000
+@@ -812,7 +812,7 @@
+ #elif defined (__CYGWIN32__) || defined(__APPLE__)
+     		(void)setpgrp();
+ #else
+-		(void)setpgrp(0, (int)getpid());
++		(void)setpgrp();
+ #endif
+ 		(void)fclose(stdin);
+ 		(void)close(0);

@@ -1,0 +1,22 @@
+diff --git a/config.h.old b/config.h
+index c852373..8402902 100644
+--- a/config.h.old
++++ b/config.h
+@@ -105,7 +105,7 @@
+ /* 
+  * Define this if you want to have KLINE command for opers and services.
+  */
+-#undef KLINE
++#define KLINE
+ 
+ /*
+  * Define this if you want to have TKLINE and UNTKLINE commands
+@@ -457,7 +457,7 @@
+ ** This adds ability to ban users with specified realnames from
+ ** connecting to the server. May be useful for various drones.
+ */
+-#undef XLINE
++#define XLINE
+ 
+ /*
+ ** Define the reason users get as a rejection message.
