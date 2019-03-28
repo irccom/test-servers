@@ -15,6 +15,12 @@ $ docker run --rm -it -p 4440:4440 -p 5550:5550 irccom/ircd-irc2:latest
 
 # UnrealIRCd 4 - port 4441
 $ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/unreal4:latest
+
+# ircd-hybrid - port 4442
+$ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/ircd-hybrid:latest
+
+# ircu2 - port 4443
+$ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/ircu2:latest
 ```
 
 -----
