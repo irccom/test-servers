@@ -10,6 +10,9 @@ The companion repo to this one is [irccom/test-framework](https://github.com/irc
 To use, install [Docker](https://www.docker.com/get-started) and then run one of these commands:
 
 ```sh
+# IRCd-irc2 - port 4440
+$ docker run --rm -it -p 4440:4440 -p 5550:5550 irccom/ircd-irc2:latest
+
 # UnrealIRCd 4 - port 4441
 $ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/unreal4:latest
 ```
@@ -21,3 +24,5 @@ On these images:
 - The server name is `<software>.example.irc.com`
 - The default oper creds are `alice / password` and `daniel / password`
 - As much as possible uses the default config (we may enable features though).
+- The MOTD is just "This is the MOTD"
+- Throttling / connection limits are disabled.
