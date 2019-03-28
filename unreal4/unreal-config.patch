@@ -1,5 +1,5 @@
 diff --git a/doc/conf/examples/example.conf b/doc/conf/examples/example.conf
-index 57a6c79e..d2afa86f 100644
+index 57a6c79e..9b8e88fd 100644
 --- a/doc/conf/examples/example.conf
 +++ b/doc/conf/examples/example.conf
 @@ -57,18 +57,18 @@ include "operclass.default.conf";
@@ -50,7 +50,7 @@ index 57a6c79e..d2afa86f 100644
   * You MUST change this!!
   */
 -oper bobsmith {
-+oper daniel {
++oper alice {
  	class opers;
  	mask *@*;
 -	password "test";
@@ -58,16 +58,29 @@ index 57a6c79e..d2afa86f 100644
  	/* Oper permissions are defined in an 'operclass' block.
  	 * See https://www.unrealircd.org/docs/Operclass_block
  	 * UnrealIRCd ships with a number of default blocks, see
-@@ -157,7 +146,7 @@ oper bobsmith {
+@@ -157,7 +146,20 @@ oper bobsmith {
  	 */
  	operclass netadmin;
  	swhois "is a Network Administrator";
 -	vhost netadmin.mynet.org;
 +	vhost opers.example.irc.com;
++};
++oper daniel {
++	class opers;
++	mask *@*;
++	password "password";
++	/* Oper permissions are defined in an 'operclass' block.
++	 * See https://www.unrealircd.org/docs/Operclass_block
++	 * UnrealIRCd ships with a number of default blocks, see
++	 * the article for a full list. We choose 'netadmin' here.
++	 */
++	operclass netadmin;
++	swhois "is a Network Administrator";
++	vhost opers.example.irc.com;
  };
  
  /* Listen blocks define the ports where the server should listen on.
-@@ -178,79 +167,15 @@ oper bobsmith {
+@@ -178,79 +180,15 @@ oper bobsmith {
  /* Standard IRC port 6667 */
  listen {
  	ip *;
@@ -151,7 +164,7 @@ index 57a6c79e..d2afa86f 100644
  
  /* Here you can add a password for the IRCOp-only /DIE and /RESTART commands.
   * This is mainly meant to provide a little protection against accidental
-@@ -261,26 +186,6 @@ drpass {
+@@ -261,26 +199,6 @@ drpass {
  	die "die";
  };
  
@@ -178,7 +191,7 @@ index 57a6c79e..d2afa86f 100644
  /* With "aliases" you can create an alias like /SOMETHING to send a message to
   * some user or bot. They are usually used for services.
   *
-@@ -380,12 +285,12 @@ vhost {
+@@ -380,12 +298,12 @@ vhost {
  
  /* Network configuration */
  set {
@@ -197,7 +210,7 @@ index 57a6c79e..d2afa86f 100644
  	prefix-quit 		"Quit";
  
  	/* Cloak keys should be the same at all servers on the network.
-@@ -396,16 +301,16 @@ set {
+@@ -396,16 +314,16 @@ set {
  	 *       UnrealIRCd generate 3 random strings for you.
  	 */
  	cloak-keys {

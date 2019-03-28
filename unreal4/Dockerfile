@@ -26,10 +26,11 @@ RUN git apply /tmp/unreal-config.patch
 COPY config.settings /ircd-src/config.settings
 RUN ./Config -quick
 
+# building!
 RUN make
 RUN make install
 
-CMD /usr/bin/env sh
+CMD /bin/sh
 
 
 
