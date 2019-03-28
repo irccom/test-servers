@@ -1,5 +1,5 @@
 diff --git a/doc/conf/examples/example.conf b/doc/conf/examples/example.conf
-index 57a6c79e..9b8e88fd 100644
+index 57a6c79e..99a2db26 100644
 --- a/doc/conf/examples/example.conf
 +++ b/doc/conf/examples/example.conf
 @@ -57,18 +57,18 @@ include "operclass.default.conf";
@@ -27,10 +27,13 @@ index 57a6c79e..9b8e88fd 100644
  };
  
  /* Clients and servers are put in class { } blocks, we define them here.
-@@ -120,17 +120,6 @@ allow {
- 	maxperip 3;
- };
- 
+@@ -117,18 +117,7 @@ class servers
+ allow {
+ 	ip *@*;
+ 	class clients;
+-	maxperip 3;
+-};
+-
 -/* Example of a special allow block on a specific IP:
 - * Requires users on that IP to connect with a password. If the password
 - * is correct then it permits 20 connections on that IP.
@@ -40,11 +43,10 @@ index 57a6c79e..9b8e88fd 100644
 -	class clients;
 -	password "somesecretpasswd";
 -	maxperip 20;
--};
--
++	maxperip 100;
+ };
+ 
  /* Oper blocks define your IRC Operators.
-  * IRC Operators are people who have "extra rights" compared to others,
-  * for example they may /KILL other people, initiate server linking,
 @@ -146,10 +135,10 @@ allow {
  /* Here is an example oper block for 'bobsmith' with password 'test'.
   * You MUST change this!!
@@ -231,3 +233,16 @@ index 57a6c79e..9b8e88fd 100644
  	modes-on-connect "+ixw"; /* when users connect, they will get these user modes */
  	modes-on-oper	 "+xwgs"; /* when someone becomes IRCOp they'll get these modes */
  	oper-auto-join "#opers"; /* IRCOps are auto-joined to this channel */
+@@ -432,9 +350,9 @@ set {
+ 
+ 	/* Anti flood protection */
+ 	anti-flood {
+-		nick-flood 3:60;	/* 3 nick changes per 60 seconds (the default) */
+-		connect-flood 3:60; /* 3 connection attempts per 60 seconds (the default) */
+-		away-flood 4:120;	/* 4 times per 2 minutes you may use /AWAY (default) */
++		nick-flood 255:5;	/* 3 nick changes per 60 seconds (the default) */
++		connect-flood 255:1; /* 3 connection attempts per 60 seconds (the default) */
++		away-flood 255:10;	/* 4 times per 2 minutes you may use /AWAY (default) */
+ 	};
+ 
+ 	/* Settings for spam filter */

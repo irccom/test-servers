@@ -52,6 +52,7 @@ EXPOSE 4441/tcp 5551/tcp
 # copy over the ircd
 COPY --from=build-env /ircd-bin /ircd-bin
 COPY --from=build-env /ircd-src/doc/conf/examples/example.conf /ircd-bin/conf/unrealircd.conf
+COPY ircd.motd /ircd-bin/conf/ircd.motd
 COPY run.sh /ircd-bin/run.sh
 RUN chmod +x /ircd-bin/run.sh
 
