@@ -1,0 +1,177 @@
+diff --git a/doc/reference.conf b/doc/reference.conf
+index 3ba3f70..a665010 100755
+--- a/doc/reference.conf
++++ b/doc/reference.conf
+@@ -52,8 +52,8 @@
+ 
+ global {
+     // required tokens
+-    name    not.configured;     # The IRC name of the server
+-    info    "located on earth"; # A short info line
++    name    bahamut.example.irc.com;     # The IRC name of the server
++    info    "Client Server"; # A short info line
+ 
+     // optional tokens
+     dpass   secret;             # Password for DIE command
+@@ -87,9 +87,9 @@ global {
+ 
+ admin {
+     // optional tokens
+-    "An unconfigured server";   # Info line #1
+-    "An unknown administrator"; # Info line #2
+-    "email@somewhere.earth";    # Info line #3
++    "Dan";   # Info line #1
++    "Main Server Administrator"; # Info line #2
++    "<daniel@example.com>";    # Info line #3
+ };
+ 
+ # Not all lines are required.  There may be only one Admin block.
+@@ -106,7 +106,7 @@ admin {
+ 
+ options {
+     // optional tokens
+-    network_name    unconfigured;   # Name of the network
++    network_name    ExampleNet;   # Name of the network
+     services_name   services.name;  # IRC name of services server
+     stats_name      stats.name;     # IRC name of stats server
+     staff_address   staff.net;      # Opermask hostname
+@@ -222,12 +222,13 @@ options {
+ 
+ port {
+     // required tokens
+-    port    6667;       # Port to listen on
+-
+-    // optional tokens
+-    bind    127.0.0.1;  # IP address to listen on
+-    ipmask  127.0.*.*;  # Mask to accept connections from
+-    flags   S;		# Allow SSL connections on this port
++    port    4444;       # Port to listen on
++    flags   n;		# Allow SSL connections on this port
++};
++port {
++    // required tokens
++    port    5554;       # Port to listen on
++    flags   Sn;		# Allow SSL connections on this port
+ };
+ 
+ # If a bind address is not specified, the server listens on all available
+@@ -261,15 +262,15 @@ class {
+     name        users;      # Name of the class
+     pingfreq    90;         # PING idle connection every N seconds
+     maxsendq    100000;     # Send buffer limit
++    maxusers    1000;       # Maximum number of clients
++};
+ 
+-    // optional, for Allow classes only:
+-    maxusers    100;        # Maximum number of clients
+-    maxclones   2:20;       # Maximum IP:site clones
+-    maxrecvq    2560;       # client excess flood threshold
+-
+-    // optional, for Connect classes only:
+-    connfreq    300;        # Try autoconnect every N seconds
+-    maxlinks    1;          # Autoconnect if less than N links in class
++class {
++    // required tokens
++    name        opers;      # Name of the class
++    pingfreq    90;         # PING idle connection every N seconds
++    maxsendq    100000;     # Send buffer limit
++    maxusers    1000;       # Maximum number of clients
+ };
+ 
+ # Idle connections are polled with the PING command every pingfreq seconds.
+@@ -330,10 +331,6 @@ allow {
+     // required tokens
+     host        *;          # Resolved host mask (optional if using ipmask)
+     ipmask      *;          # Unresolved IP mask (optional if using host)
+-    
+-    // optional tokens
+-    port        6667;       # Apply block to this port only
+-    passwd      secret;     # Require password for connection
+     flags       mCFT;       # Special flags for this connection
+     class       users;      # Place connections in this class
+ };
+@@ -448,14 +445,19 @@ allow {
+ 
+ oper {
+     // required tokens
+-    name    johndoe;        # Account name
+-    passwd  secret;         # Account password (optionally encrypted)
+-    host    ident@hostmask; # Restrict access to this mask
+-    host    *@172.16.4.2;   # Up to 32 masks can be specified here
++    name    alice;        # Account name
++    passwd  password;         # Account password (optionally encrypted)
+     access  *Aa;            # Access flags
+-
+-    // optional tokens
+     class   opers;          # Place authenticated client in this class
++    host    *;
++};
++oper {
++    // required tokens
++    name    daniel;        # Account name
++    passwd  password;         # Account password (optionally encrypted)
++    access  *Aa;            # Access flags
++    class   opers;          # Place authenticated client in this class
++    host    *;
+ };
+ 
+ # The name and passwd tokens match the parameters of the OPER command.  If
+@@ -522,19 +524,6 @@ oper {
+ #     N:host:apasswd:name:flags:class
+ #     H:*::name
+ 
+-connect {
+-    // required tokens
+-    name    server.name;    # Other server's name
+-    host    server.host;    # Other server's host
+-    apasswd secret;         # Password to accept from other server
+-    cpasswd secret;         # Password to send to other server
+-
+-    // optional tokens
+-    port    7000;           # Port to autoconnect to other server on
+-    bind    127.0.0.1;      # IP to connect from
+-    flags   ZEH;            # Flags for this link
+-    class   servers;        # Connection class to use for this link
+-};
+ 
+ # The name token specifies the IRC name of the other server, and the host
+ # token specifies its hostname or IP address.  Using an IP address is
+@@ -571,11 +560,6 @@ connect {
+ # Old conf format equivalents:
+ #     U:name:*:*
+ 
+-super {
+-    "server1.name";     # Super server #1
+-    "server2.name";     # Super server #2
+-                        # ...
+-};
+ 
+ # Super servers are permitted to do things typical network services would
+ # want to do, such as apply network bans, manage channel modes, etc; the
+@@ -635,13 +619,6 @@ restrict {
+ # Old conf format equivalents:
+ #     K:host:reason:username    (mask was split)
+ 
+-kill {
+-    // required tokens
+-    mask    "*@192.168.0.0/24";     # Disallowed mask (wildcard or CIDR)
+-    
+-    // optional tokens
+-    reason  "tourists only!";       # Reason for ban
+-};
+ 
+ # Kill blocks are a flexible general client ban mechanism.  The mask token
+ # can be specified in several formats:
+@@ -669,12 +646,6 @@ kill {
+ # Old conf format equivalents:
+ #     modules.ini
+ 
+-modules {
+-    // optional tokens
+-    path        mods;   # Directory to look for modules in
+-    autoload    mod1;   # Module to load at startup
+-    autoload    mod2;   # Up to 128 modules can be specified here
+-};
+ 
+ # The path token specifies the directory to search for modules in, relative
+ # to the ircd directory.  There can only be one path, and the default is

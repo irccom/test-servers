@@ -1,0 +1,39 @@
+diff --git a/include/defs.h b/include/defs.h
+index cac477d..a21eaf3 100644
+--- a/include/defs.h
++++ b/include/defs.h
+@@ -76,7 +76,7 @@
+ #  define VA_COPY __va_copy
+ # endif
+ #elif defined (__x86_64)
+-# define VA_COPY __va_copy
++# define VA_COPY va_copy
+ #else
+ # define VA_COPY(x, y) x = y
+ #endif
+diff --git a/include/ircsprintf.h b/include/ircsprintf.h
+index 4b45fa7..ef26414 100644
+--- a/include/ircsprintf.h
++++ b/include/ircsprintf.h
+@@ -28,7 +28,7 @@
+ #  define VA_COPY __va_copy
+ # endif
+ #elif defined (__x86_64)
+-# define VA_COPY __va_copy
++# define VA_COPY va_copy
+ #else
+ # define VA_COPY(x, y) x = y
+ #endif
+diff --git a/include/resolv.h b/include/resolv.h
+index b5a8aaa..b4c8e43 100644
+--- a/include/resolv.h
++++ b/include/resolv.h
+@@ -57,7 +57,7 @@
+ 
+ #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
+ 
+-#if ((__GNU_LIBRARY__ == 6) && (__GLIBC__ >= 2) && (__GLIBC_MINOR__ >= 3)) || defined(__UCLIBC__)
++#if defined(__linux__)
+ # define MAXRESOLVSORT		10	/* number of net to sort on */
+ 
+ struct __res_state {
