@@ -1,0 +1,525 @@
+diff --git a/doc/reference.conf b/doc/reference.conf
+index 397b0f32..a5b313ca 100644
+--- a/doc/reference.conf
++++ b/doc/reference.conf
+@@ -41,7 +41,7 @@ serverinfo {
+ 	/*
+ 	 * name: the name of this server. This cannot be changed at runtime.
+ 	 */
+-	name = "server.example.net";
++	name = "hybrid.example.irc.com";
+ 
+ 	/*
+ 	 * sid: a server's unique ID. This is three characters long and must
+@@ -58,14 +58,14 @@ serverinfo {
+ 	/*
+ 	 * description: the description of the server.
+ 	 */
+-	description = "ircd-hybrid test server";
++	description = "Client Server";
+ 
+ 	/*
+ 	 * network_name, network_desc: the name and description of the network this
+ 	 * server is on. Shown in the 005 reply and used with serverhiding.
+ 	 */
+-	network_name = "MyNet";
+-	network_desc = "This is My Network";
++	network_name = "ExampleNet";
++	network_desc = "The ExampleNet Network";
+ 
+ 	/*
+ 	 * hub: allow this server to act as a hub and have multiple servers
+@@ -196,9 +196,9 @@ serverinfo {
+  * admin {}:  contains administrative information about the server
+  */
+ admin {
+-	name = "Smurf target";
++	name = "Dan";
+ 	description = "Main Server Administrator";
+-	email = "<admin@server.example.net>";
++	email = "<daniel@example.com>";
+ };
+ 
+ /*
+@@ -307,18 +307,7 @@ class {
+  * depending on its origin. Applies to local users only.
+  */
+ motd {
+-	/*
+-	 * mask: multiple mask entries are permitted. Mask can either be
+-	 * a class name or a hostname. CIDR is supported.
+-	 */
+-	mask = "*.at";
+-	mask = "*.de";
+-	mask = "*.ch";
+-
+-	/*
+-	 * file: path to the motd file.
+-	 */
+-	file = "etc/german.motd";
++	file = "etc/ircd.motd";
+ };
+ 
+ /*
+@@ -333,101 +322,16 @@ listen {
+ 	 */
+ 
+ 	/* port: listen on all available IP addresses, ports 6665 to 6669. */
+-	port = 6665 .. 6669;
+-
+-	/*
+-	 * Listen on 192.0.2.2/6697 with SSL enabled and hidden from STATS P
+-	 * unless you are an administrator.
+-	 *
+-	 * NOTE: The "flags" directive always has to come before "port".
+-	 *
+-	 * Currently available flags are:
+-	 *
+-	 *  ssl    - Port may only accept TLS/SSL connections
+-	 *  server - Only server connections are permitted
+-	 *  hidden - Port is hidden from /stats P, unless you're an admin
+-	 */
+-	flags = hidden, ssl;
+-	host = "192.0.2.2";
+-	port = 6697;
+-
+-	/*
+-	 * host: set a specific IP address to listen on using the
+-	 * subsequent port definitions. This may be IPv4 or IPv6.
+-	 */
+-	host = "192.0.2.3";
+-	port = 7000, 7001;
+-
+-	host = "2001:DB8::2";
+-	port = 7002;
+-};
+-
+-/*
+- * auth {}:  allow users to connect to the ircd
+- */
+-auth {
+-	/*
+-	 * user: the user@host allowed to connect. Multiple user
+-	 * lines are permitted within each auth {} block.
+-	 */
+-	user = "*@192.0.2.0/24";
+-	user = "*test@2001:DB8:*";
+-
+-	/* password: an optional password that is required to use this block. */
+-	password = "letmein";
+-
+-	/*
+-	 * encrypted: indicates whether the auth password above has been
+-	 * encrypted. Default is 'no' if nothing else is specified.
+-	 */
+-	encrypted = yes;
+-
+-	/*
+-	 * spoof: fake the user's host to this. This is free-form; just do
+-	 * everyone a favor and don't abuse it. ('=' prefix on /stats I)
+-	 */
+-	spoof = "I.still.hate.packets";
+-
+-	/* class: the class the user is placed in. */
+-	class = "opers";
+-
+-	/*
+-	 * need_password - don't allow users who haven't supplied the correct  | ('&' prefix on /stats I if disabled)
+-	 *                 password to connect using another auth {} block
+-	 * need_ident    - require the user to have identd to connect          | ('+' prefix on /stats I)
+-	 * spoof_notice  - enable spoofing notification to admins
+-	 * exceed_limit  - allow a user to exceed class limits                 | ('>' prefix on /stats I)
+-	 * kline_exempt  - exempt this user from k-lines                       | ('^' prefix on /stats I)
+-	 * xline_exempt  - exempt this user from x-lines                       | ('!' prefix on /stats I)
+-	 * resv_exempt   - exempt this user from resvs                         | ('$' prefix on /stats I)
+-	 * no_tilde      - remove ~ from a user with no ident                  | ('-' prefix on /stats I)
+-	 * can_flood     - allow this user to exceed flood limits              | ('|' prefix on /stats I)
+-	 * webirc        - enables WEBIRC authentication for web-based         | ('<' prefix on /stats I)
+-	 *                 clients such as Mibbit
+-	 */
+-	flags = need_password, spoof_notice, exceed_limit, kline_exempt,
+-		xline_exempt, resv_exempt, no_tilde, can_flood;
+-};
+-
+-auth {
+-	/*
+-	 * redirserv, redirport: the server and port to redirect a user to.
+-	 * A user does not have to obey the redirection; the ircd just
+-	 * suggests an alternative server for them.
+-	 */
+-	redirserv = "server2.example.net";
+-	redirport = 6667;
+-
+-	user = "*@*.ch";
+-
+-	/* class: a class is required even though it is not used. */
+-	class = "users";
++	port = 4442;
++	
++	flags = ssl;
++	port = 5552;
+ };
+ 
+ auth {
+ 	user = "*@*";
+ 	class = "users";
+-	flags = need_ident;
++	flags = can_flood;
+ };
+ 
+ /*
+@@ -435,14 +339,13 @@ auth {
+  */
+ operator {
+ 	/* name: the name of the operator */
+-	name = "sheep";
++	name = "alice";
+ 
+ 	/*
+ 	 * user: the user@host required for this operator. Multiple user
+ 	 * lines are permitted within each operator {} block.
+ 	 */
+-	user = "*sheep@192.0.2.0/26";
+-	user = "*@192.0.2.240/28";
++	user = "*@*";
+ 
+ 	/*
+ 	 * password: the password required to oper. By default this will need
+@@ -450,13 +353,13 @@ operator {
+ 	 * The availability of various password hashing algorithms may vary
+ 	 * depending on the system's crypt(3) implementation.
+ 	 */
+-	password = "$5$x5zof8qe.Yc7/bPp$5zIg1Le2Lsgd4CvOjaD20pr5PmcfD7ha/9b2.TaUyG4";
++	password = "password";
+ 
+ 	/*
+ 	 * encrypted: indicates whether the oper password above has been
+ 	 * encrypted. Default is 'yes' if nothing else is specified.
+ 	 */
+-	encrypted = yes;
++	encrypted = no;
+ 
+ 	/*
+ 	 * ssl_certificate_fingerprint: enhances security by additionally checking
+@@ -559,201 +462,16 @@ operator {
+ 	flags = admin, connect, connect:remote, die, globops, kill, kill:remote,
+ 		kline, module, rehash, restart, set, unkline, unxline, xline;
+ };
+-
+-/*
+- * connect {}: define a server to connect to
+- */
+-connect {
+-	/* name: the name of the server. */
+-	name = "uplink.example.net";
+-
+-	/*
+-	 * host: the host or IP address to connect to. If a hostname is used,
+-	 * it must match the reverse DNS of the server.
+-	 */
+-	host = "192.0.2.4";
+-
+-	/*
+-	 * bind: the IP address to bind to when making outgoing connections to
+-	 * servers.
+-	 */
+-	bind = "192.0.2.5";
+-
+-	/*
+-	 * send_password, accept_password: the passwords to send and accept.
+-	 * The remote server will have these passwords swapped.
+-	 */
+-	send_password = "password";
+-	accept_password = "anotherpassword";
+-
+-	/*
+-	 * encrypted: indicates whether the accept_password above has been
+-	 * encrypted.
+-	 */
++operator {
++	name = "daniel";
++	user = "*@*";
++	password = "password";
+ 	encrypted = no;
+-
+-	/* port: the port to connect to this server on. */
+-	port = 6666;
+-
+-	/*
+-	 * hub_mask: the mask of servers that this server may hub. Multiple
+-	 * entries are permitted.
+-	 */
+-	hub_mask = "*";
+-
+-	/*
+-	 * leaf_mask: the mask of servers this server may not hub. Multiple
+-	 * entries are permitted. Useful for forbidding EU -> US -> EU routes.
+-	 */
+-#	leaf_mask = "*.uk";
+-
+-	/* class: the class this server is in. */
+-	class = "server";
+-
+-	/*
+-	 * ssl_cipher_list: list of ciphers that the server we are connecting to
+-	 * must support. If the server is not capable of using any of the ciphers
+-	 * listed below, the connection will simply be rejected.
+-	 * Can be used to enforce stronger ciphers, even though this option
+-	 * is not necessarily required to establish a SSL/TLS connection.
+-	 *
+-	 * Multiple ciphers are separated by colons. The order of preference
+-	 * is from left to right.
+-	 */
+-#	ssl_cipher_list = "ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA:AES256-SHA";
+-
+-	/*
+-	 * ssl_certificate_fingerprint: enhances security by additionally checking
+-	 * the server's client certificate fingerprint against the specified
+-	 * fingerprint below.
+-	 */
+-#	ssl_certificate_fingerprint = "4C62287BA6776A89CD4F8FF10A62FFB35E79319F51AF6C62C674984974FCCB1D";
+-
+-	/*
+-	 * autoconn   - controls whether we autoconnect to this server or not,
+-	 *              dependent on class limits. By default, this is disabled.
+-	 * ssl        - Initiates a TLS/SSL connection.
+-	 */
+-#	flags = autoconn, ssl;
+-};
+-
+-connect {
+-	name = "ipv6.example.net";
+-	host = "2001:DB8::3";
+-	send_password = "password";
+-	accept_password = "password";
+-	port = 6666;
+-
+-	/*
+-	 * aftype: controls whether the connection uses "ipv4" or "ipv6".
+-	 * Default is ipv4.
+-	 */
+-	aftype = ipv6;
+-	class = "server";
+-};
+-
+-/*
+- * cluster {}:  servers that share klines/unkline/xline/unxline/resv/unresv/locops
+- * automatically
+- */
+-cluster {
+-	/*
+-	 * name: the server to share with; this can take wildcards
+-	 *
+-	 * NOTE: only local actions will be clustered, meaning that if
+-	 *       the server receives a shared kline/unkline/etc, it
+-	 *       will not be propagated to clustered servers.
+-	 *
+-	 *       Remote servers are not necessarily required to accept
+-	 *       clustered lines, they need a shared {} block for *THIS*
+-	 *       server in order to accept them.
+-	 */
+-	name = "*.example.net";
+-
+-	/*
+-	 * type: list of what to share; options are as follows:
+-	 *      dline   - share dlines
+-	 *      undline - share undlines
+-	 *      kline   - share klines
+-	 *      unkline - share unklines
+-	 *      xline   - share xlines
+-	 *      unxline - share unxlines
+-	 *      resv    - share resvs
+-	 *      unresv  - share unresvs
+-	 *      locops  - share locops
+-	 *      all     - share all of the above (default)
+-	 */
+-	type = kline, unkline, locops, xline, resv;
+-};
+-
+-/*
+- * shared {}: users that are allowed to remote kline
+- *
+- * NOTE: This can effectively be used for remote klines.
+- *       Please note that there is no password authentication
+- *       for users setting remote klines. You must also be
+- *       /oper'd in order to issue a remote kline.
+- */
+-shared {
+-	/*
+-	 * name: the server the user must be connected to in order to set klines.
+-	 * If this is not specified, the user will be allowed to kline from all
+-	 * servers.
+-	 */
+-	name = "irc2.example.net";
+-
+-	/*
+-	 * user: the user@host mask that is allowed to set klines. If this is
+-	 * not specified, all users on the server above will be allowed to set
+-	 * a remote kline.
+-	 */
+-	user = "oper@my.host.is.spoofed";
+-
+-	/*
+-	 * type: list of what to share, options are as follows:
+-	 *      dline   - allow oper/server to dline
+-	 *      undline - allow oper/server to undline
+-	 *      kline   - allow oper/server to kline
+-	 *      unkline - allow oper/server to unkline
+-	 *      xline   - allow oper/server to xline
+-	 *      unxline - allow oper/server to unxline
+-	 *      rehash  - allow oper/server to rehash
+-	 *      resv    - allow oper/server to resv
+-	 *      unresv  - allow oper/server to unresv
+-	 *      locops  - allow oper/server to locops - only used for servers that cluster
+-	 *      all     - allow oper/server to do all of the above (default)
+-	 */
+-	type = kline, unkline, resv;
+-};
+-
+-/*
+- * kill {}:  users that are not allowed to connect
+- * Oper issued klines will be added to the specified kline database
+- */
+-kill {
+-	user = "bad@*.example.net";
+-	reason = "Obviously hacked account";
+-};
+-
+-/*
+- * deny {}:  IP addresses that are not allowed to connect
+- * (before DNS/ident lookup)
+- * Oper issued dlines will be added to the specified dline database
+- */
+-deny {
+-	ip = "192.0.2.0/28";
+-	reason = "Reconnecting vhosted bots";
+-};
+-
+-/*
+- * exempt {}:  IP addresses that are exempt from deny {} and Dlines
+- */
+-exempt {
+-	ip = "192.0.2.240/28";
+-
+-	/* The 'ip' directives can be stacked */
+-	ip = "10.0.0.0/8";
+-	ip = "fc00::/7";
++	ssl_connection_required = no;
++	class = "opers";
++	umodes = locops, servnotice, wallop;
++	flags = admin, connect, connect:remote, die, globops, kill, kill:remote,
++		kline, module, rehash, restart, set, unkline, unxline, xline;
+ };
+ 
+ /*
+@@ -771,48 +489,6 @@ resv { mask = "HostServ"; reason = "Reserved for services"; };
+ resv { mask = "StatServ"; reason = "Reserved for services"; };
+ resv { mask = "#*services*"; reason = "Reserved for services"; };
+ 
+-resv {
+-	/*
+-	 * mask: masks starting with a '#' are automatically considered
+-	 * as channel name masks.
+-	 */
+-	mask = "#helsinki";
+-	reason = "Channel is reserved for Finnish inhabitants";
+-
+-	/*
+-	 * exempt: nick!user@host mask. CIDR is supported. Exempt
+-	 * entries can be stacked.
+-	 */
+-	exempt = "*@*.sexy";
+-};
+-
+-/*
+- * gecos {}:  used for banning users based on their "realname".
+- */
+-gecos {
+-	name = "*sex*";
+-	reason = "Possible spambot";
+-};
+-
+-gecos {
+-	name = "sub7server";
+-	reason = "Trojan drone";
+-};
+-
+-/*
+- * service {}: specifies a server which may act as a network service
+- *
+- * NOTE: it is very important that every server on the network
+- *       has the same service {} block.
+- */
+-service {
+-	/* name: the actual name of the service. Wildcards are not allowed. */
+-	name = "service.example.net";
+-
+-	/* The 'name' directives can be stacked. */
+-	name = "stats.example.net";
+-};
+-
+ /*
+  * pseudo {}: adds pseudo/custom commands also known as service aliases
+  */
+@@ -925,14 +601,14 @@ channel {
+ 	 * invite_client_count, invite_client_time: how many INVITE commands
+ 	 * are permitted per client per invite_client_time.
+ 	 */
+-	invite_client_count = 10;
++	invite_client_count = 1000;
+ 	invite_client_time = 5 minutes;
+ 
+ 	/*
+ 	 * invite_delay_channel: how often an INVITE to any specific channel
+ 	 * is permitted, regardless of the user sending the INVITE.
+ 	 */
+-	invite_delay_channel = 5 seconds;
++	invite_delay_channel = 0 seconds;
+ 
+ 	/*
+ 	 * invite_expire_time: specifies the amount of time an INVITE will be
+@@ -952,7 +628,7 @@ channel {
+ 	 * knock_delay_channel: how often a KNOCK to any specific channel
+ 	 * is permitted, regardless of the user sending the KNOCK.
+ 	 */
+-	knock_delay_channel = 1 minute;
++	knock_delay_channel = 0 minutes;
+ 
+ 	/*
+ 	 * max_channels: the maximum number of channels a user can join/be on.
+@@ -975,7 +651,7 @@ channel {
+ 	 * +b opers will be notified. These are only default values which can be
+ 	 * changed via "/QUOTE SET JFLOODCOUNT" and "/QUOTE SET JFLOODTIME".
+ 	 */
+-	default_join_flood_count = 18;
++	default_join_flood_count = 0;
+ 	default_join_flood_time = 6 seconds;
+ };
+ 
+@@ -1246,7 +922,7 @@ general {
+ 	 * intensive commands
+ 	 * (ADMIN, HELP, LUSERS, VERSION, remote WHOIS)
+ 	 */
+-	pace_wait_simple = 1 second;
++	pace_wait_simple = 0 seconds;
+ 
+ 	/*
+ 	 * pace_wait: minimum time required between use of more intensive commands
+@@ -1322,7 +998,7 @@ general {
+ 	 * Offers protection against flooders who reconnect quickly.
+ 	 * Set to 0 to disable.
+ 	 */
+-	throttle_time = 2 seconds;
++	throttle_time = 0 seconds;
+ };
+ 
+ modules {
+@@ -1343,7 +1019,7 @@ modules {
+  */
+ log {
+ 	/* Do you want to enable logging to ircd.log? */
+-	use_logging = yes;
++	use_logging = no;
+ 
+ 	file {
+ 		type = oper;
