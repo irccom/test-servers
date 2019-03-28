@@ -17,10 +17,13 @@ $ docker run --rm -it -p 4440:4440 -p 5550:5550 irccom/ircd-irc2:latest
 $ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/unreal4:latest
 
 # ircd-hybrid - port 4442
-$ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/ircd-hybrid:latest
+$ docker run --rm -it -p 4441:4442 -p 5552:5552 irccom/ircd-hybrid:latest
 
 # ircu2 - port 4443
-$ docker run --rm -it -p 4441:4441 -p 5551:5551 irccom/ircu2:latest
+$ docker run --rm -it -p 4441:4443 -p 5553:5553 irccom/ircu2:latest
+
+# bahamut - port 4444
+$ docker run --rm -it -p 4441:4444 -p 5554:5554 irccom/bahamut:latest
 ```
 
 -----
