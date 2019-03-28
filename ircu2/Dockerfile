@@ -43,7 +43,7 @@ RUN apk upgrade
 RUN mkdir /lib/modules
 
 # ircd ports
-EXPOSE 4442/tcp 5552/tcp
+EXPOSE 4443/tcp 5553/tcp
 
 # copy over the ircd
 COPY --from=build-env /ircd-bin /ircd-bin
