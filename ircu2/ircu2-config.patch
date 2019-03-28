@@ -1,0 +1,437 @@
+diff --git a/doc/example.conf b/doc/example.conf
+index 661edd0b..309d9373 100644
+--- a/doc/example.conf
++++ b/doc/example.conf
+@@ -85,8 +85,8 @@
+ # In most cases, you do not need to specify either the dns vhost or
+ # the dns server.
+ General {
+-         name = "London.UK.Eu.UnderNet.org";
+-         description = "University of London, England";
++         name = "ircu2.example.irc.com";
++         description = "Client Server";
+          numeric = 1;
+ };
+ 
+@@ -96,9 +96,8 @@ General {
+ # It should contain at least an admin Email contact address.
+ Admin {
+   # At most two location lines are allowed...
+-  Location = "The University of London";
+-  Location = "Undernet IRC server";
+-  Contact = "IRC Admins <irc@london.ac.uk>";
++  Location = "IRC Foundation";
++  Contact = "Dan <daniel@example.com>";
+ };
+ 
+ # [Classes]
+@@ -181,21 +180,9 @@ Class {
+  name = "Local";
+  pingfreq = 1 minutes 30 seconds;
+  sendq = 160000;
+- maxlinks = 100;
++ maxlinks = 1000;
+  usermode = "+iw";
+ };
+-Class {
+- name = "America";
+- pingfreq = 1 minutes 30 seconds;
+- sendq = 80000;
+- maxlinks = 5;
+-};
+-Class {
+- name = "Other";
+- pingfreq = 1 minutes 30 seconds;
+- sendq = 160000;
+- maxlinks = 400;
+-};
+ Class {
+  name = "Opers";
+  pingfreq = 1 minutes 30 seconds;
+@@ -257,129 +244,13 @@ Class {
+ 
+  local = no;
+ };
+-# [Client]
+-#
+-# To allow clients to connect, they need authorization. This can be
+-# done based on hostmask, address mask, and/or with a password.
+-# With intelligent use of classes and the maxconnections field in the
+-# Client blocks, you can let in a specific domain, but get rid of all other
+-# domains in the same toplevel, thus setting up some sort of "reverse
+-# Kill block".
+-# Client {
+-#  host = "user@host";
+-#  ip = "user@ip";
+-#  password = "password";
+-#  class = "classname";
+-# };
+-#
+-# Technical description (for examples, see below):
+-# For every connecting client, the IP address is known.  A reverse lookup
+-# on this IP-number is done to get the (/all) hostname(s).
+-# Each hostname that belongs to this IP-number is matched to <hostmask>,
+-# and the Client {} is used when any matches; the client will then show
+-# with this particular hostname.  If none of the hostnames match, then
+-# the IP-number is matched against the <IP mask ...> field, if this matches
+-# then the Client{} is used nevertheless and the client will show with the
+-# first (main) hostname if any; if the IP-number did not resolve then the
+-# client will show with the dot notation of the IP-number.
+-# There is a special case for the UNIX domain sockets and localhost connections
+-# though; in this case the <IP mask ...> field is compared with the
+-# name of the server (thus not with any IP-number representation). The name
+-# of the server is the one returned in the numeric 002 reply, for example:
+-# 002 Your host is 2.undernet.org[jolan.ppro], running version ...
+-# Then the "jolan.ppro" is the name used for matching.
+-# Therefore, unix domain sockets, and connections to localhost would
+-# match this block:
+-# host = "*@jolan.ppro";
+-#
+-# This is the "fallback" entry. All .uk, .nl, and all unresolved are
+-# in these two lines.
+-# By using two different lines, multiple connections from a single IP
+-# are only allowed from hostnames which have both valid forward and
+-# reverse DNS mappings.
+-Client
+-{
+- class = "Other";
+- ip = "*@*";
+- maxlinks = 2;
+-};
+ 
+ 
+-Client
+-{
+- class = "Other";
+- host = "*@*";
+- maxlinks = 2;
+-};
+-# If you don't want unresolved dudes to be able to connect to your
+-# server, do not specify any "ip = " settings.
+-#
+-# Here, take care of all American ISPs.
+-Client
+-{
+- host = "*@*.com";
+- class = "America";
+- maxlinks = 2;
+-};
+-
+-Client
+-{
+- host = "*@*.net";
+- class = "America";
+- maxlinks = 2;
+-};
+-# Now list all the .com / .net domains that you wish to have access...
+-# actually it's less work to do it this way than to do it the other
+-# way around - K-lining every single ISP in the US.
+-# I wish people in Holland just got a .nl domain, and not try to be
+-# cool and use .com...
+-Client { host = "*@*.wirehub.net"; class = "Other"; maxlinks=2; };
+-Client { host = "*@*.planete.net"; class = "Other"; maxlinks=2; };
+-Client { host = "*@*.ivg.com"; class = "Other"; maxlinks=2; };
+-Client { host = "*@*.ib.com"; class = "Other"; maxlinks=2; };
+-Client { host = "*@*.ibm.net"; class = "Other"; maxlinks=2; };
+-Client { host = "*@*.hydro.com"; class = "Other"; maxlinks=2; };
+-Client { host = "*@*.nl.net"; class = "Local"; maxlinks=2; };
+-
+-# You can request a more complete listing, including the "list of standard
+-# Kill blocks" from the Routing Committee; it will also be sent to you if
+-# you apply for a server and get accepted.
+-#
+-# Ourselves - this makes sure that we can get in, no matter how full
+-# the server is (hopefully).
+-Client
+-{
+- host = "*@*.london.ac.uk";
+- ip = "*@193.37.*";
+- class = "Local";
+- # A maxlinks of over 5 will automatically be glined by euworld on Undernet
+- maxlinks = 5;
+-};
+-
+-# You can put an expression in the maxlinks value, which will make ircd
+-# only accept a client when the total number of connections to the network
+-# from the same IP number doesn't exceed this number.
+-# The following example would accept at most one connection per IP number
+-# from "*.swipnet.se" and at most two connections from dial up accounts
+-# that have "dial??.*" as host mask:
+-# Client {
+-#  host = "*@*.swipnet.se";
+-#  maxlinks = 1;
+-#  class = "Other";
+-# };
+-# Client {
+-#  host = "*@dial??.*";
+-#  maxlinks = 2;
+-#  class = "Other";
+-# };
+-#
+-# If you are not worried about who connects, this line will allow everyone
+-# to connect.
+ Client {
+  host = "*@*";
+  ip = "*@*";
+- class = "Other";
+- maxlinks = 2;
++ class = "Local";
++ maxlinks = 2000;
+ };
+ 
+ 
+@@ -401,23 +272,8 @@ Client {
+ # to register their domains and get their own client{} lines if they're in
+ # Europe, or move to US.UnderNet.org if they're in the USA.
+ motd {
+- host = "*.net";
+- file = "net_com.motd";
+-};
+-motd {
+- host = "*.com";
+- file = "net_com.motd";
+-};
+-motd {
+- host = "America";
+- file = "net_com.motd";
+-};
+-
+-# A different MOTD for ourselves, where we point out that the helpdesk
+-# better not be bothered with questions regarding irc...
+-motd {
+- host = "*.london.ac.uk";
+- file = "london.motd";
++ host = "*";
++ file = "ircd.motd";
+ };
+ 
+ # [UWorld]
+@@ -453,17 +309,6 @@ motd {
+ # probable), you need to define your uplink as being allowed to "hub".
+ # See the Connect block documentation for details on how to do that.
+ 
+-UWorld {
+- oper = "uworld.eu.undernet.org";
+- oper = "uworld2.undernet.org";
+- oper = "uworld.undernet.org";
+- name = "channels.undernet.org";
+- name = "channels2.undernet.org";
+- name = "channels3.undernet.org";
+- name = "channels4.undernet.org";
+- name = "channels5.undernet.org";
+- name = "channels6.undernet.org";
+-};
+ 
+ # As of ircu2.10.05 is it possible to Jupe nicks. As per CFV-0095 and
+ # CFV-0255, the following nicks must be juped, it is not allowed to
+@@ -505,37 +350,6 @@ Jupe {
+ # whole domain from your server, they can get on IRC via any other server
+ # that doesn't have them Killed (yet).
+ #
+-# With a simple comment, using quotes:
+-Kill { host = "*.au"; reason = "Please use a nearer server"; };
+-Kill { host = "*.edu"; reason = "Please use a nearer server"; };
+-
+-# You can also kill based on username.
+-Kill { username = "sub7"; realname = "s*7*"; reason = "You are infected with a Trojan"; };
+-
+-# The file can contain for example, a reason, a link to the
+-# server rules and a contact address.  Note the combination
+-# of username and host in the host field.
+-Kill
+-{
+- host = "*luser@unixbox.flooder.co.uk";
+- file = "kline/youflooded.txt";
+-};
+-
+-# IP-based kill lines apply to all hosts, even if an IP address has a
+-# properly resolving host name.
+-Kill
+-{
+- host = "192.168.*";
+- file = "klines/martians";
+-};
+-
+-# The realname field lets you ban by realname...
+-Kill
+-{
+- realname = "*sub7*";
+- reason = "You are infected with a Trojan";
+-};
+-
+ # [Connect]
+ #
+ # You probably want your server connected to other servers, so your users
+@@ -582,14 +396,7 @@ Kill
+ # 'hub = "*";'.
+ #
+ # Our primary uplink.
+-Connect {
+- name = "Amsterdam.NL.Eu.UnderNet.org";
+- host = "1.2.3.4";
+- password = "passwd";
+- port = 4400;
+- class = "Server";
+- hub;
+-};
++
+ 
+ # [crule]
+ #
+@@ -605,23 +412,6 @@ Connect {
+ #  # applies to autoconnects.
+ #  all = yes;
+ # };
+-CRULE
+-{
+- server = "*.US.UnderNet.org";
+- rule = "connected(*.US.UnderNet.org)";
+-};
+-CRULE
+-{
+- server = "*.EU.UnderNet.org";
+- rule = "connected(Amsterdam.NL.EU.*)";
+-};
+-
+-# The following block is recommended for leaf servers:
+-CRULE
+-{
+- server = "*";
+- rule = "directcon(*)";
+-};
+ 
+ # [Operator]
+ #
+@@ -670,16 +460,15 @@ CRULE
+ # operator.  Listing defaulted privileges just makes things harder to
+ # find.
+ Operator {
+- local = no;
+- host = "*@*.cs.vu.nl";
+- password = "VRKLKuGKn0jLt";
+- name = "Niels";
+- class = "Local";
++ host = "*@*";
++ password = "$PLAIN$password";
++ name = "alice";
++ class = "Opers";
+ };
+ Operator {
+- host = "*@*.uu.net";
+- password = "$PLAIN$notencryptedpass";
+- name = "Niels";
++ host = "*@*";
++ password = "$PLAIN$password";
++ name = "daniel";
+  class = "Opers";
+ };
+ 
+@@ -741,88 +530,11 @@ Operator {
+ # WILL bind to all interfaces - not what most people seem to expect.
+ #
+ Port {
+- server = yes;
+- port = 4400;
+-};
+-
+-# This is an IPv4-only Server port that is Hidden
+-Port {
+- server = yes;
+- hidden = yes;
+- port = ipv4 4401;
+-};
+-
+-# The following are normal client ports
+-Port { port = 6667; };
+-Port { port = 6668; };
+-Port {
+- # This only accepts clients with IPs like 192.168.*.
+- mask = "192.168.*";
+- port = 6666;
+-};
+-
+-# This is a hidden client port, listening on 168.8.21.107.
+-Port {
+- vhost = "168.8.21.107";
+- hidden = yes;
+- port = 7000;
++ server = no;
++ port = 4443;
+ };
+ 
+-# More than one vhost may be present in a single Port block; in this case,
+-# we recommend listing the port number on the vhost line for clarity.
+-Port {
+- vhost = "172.16.0.1" 6667;
+- vhost = "172.16.3.1" 6668;
+- hidden = no;
+-};
+-
+-# Quarantine blocks disallow operators from using OPMODE and CLEARMODE
+-# on certain channels.  Opers with the force_opmode (for local
+-# channels, force_local_opmode) privilege may override the quarantine
+-# by prefixing the channel name with an exclamation point ('!').
+-# Wildcards are NOT supported; the channel name must match exactly.
+-Quarantine {
+-  "#shells" = "Thou shalt not support the h4><0rz";
+-  "&kiddies" = "They can take care of themselves";
+-};
+-
+-# This is a server-implemented alias to send a message to a service.
+-# The string after Pseudo is the command name; the name entry inside
+-# is the service name, used for error messages.  More than one nick
+-# entry can be provided; the last one listed has highest priority.
+-Pseudo "CHANSERV" {
+- name = "X";
+- nick = "X@channels.undernet.org";
+-};
+ 
+-# You can also prepend text before the user's message.
+-Pseudo "LOGIN" {
+- name = "X";
+- prepend = "LOGIN ";
+- nick = "X@channels.undernet.org";
+-};
+-
+-# You can ask a separate server whether to allow users to connect.
+-# Uncomment this ONLY if you have an iauth helper program.
+-# IAuth {
+-#  program = "../path/to/iauth" "-n" "options go here";
+-# };
+-
+-# Clients who connect to a WebIRC port, match a WebIRC block and send
+-# "WEBIRC <password> <username> <hostname> <ip>" during registration
+-# can spoof their username, hostname and IP address.
+-#
+-# A rehash will disconnect clients using a WebIRC block that was
+-# removed.  A WebIRC block is considered removed if there is no block
+-# in the new config with the same IP and password -- if only the
+-# description changes, the new description is shown in /whois even for
+-# clients who were connected before the rehash.
+-WebIRC {
+- ip = "1.2.3.4";  # may be a netmask, e.g. 1.2.3.4/28
+- password = "webirc-secret";
+- description = "some webirc client";
+- hidden = yes; # hides IP in /stats webirc
+-};
+ 
+ # [features]
+ # IRC servers have a large number of options and features.  Most of these
+@@ -852,7 +564,7 @@ features
+ #  "RELIABLE_CLOCK"="FALSE";
+ #  "BUFFERPOOL"="27000000";
+ #  "HAS_FERGUSON_FLUSHER"="FALSE";
+-#  "CLIENT_FLOOD"="1024";
++ "CLIENT_FLOOD"="8000";
+ #  "SERVER_PORT"="4400";
+ #  "NODEFAULTMOTD"="TRUE";
+ #  "MOTD_BANNER"="TRUE";
+@@ -890,7 +602,7 @@ features
+ # "POLLS_PER_LOOP" = "200";
+ # "IRCD_RES_TIMEOUT" = "4";
+ # "IRCD_RES_RETRIES" = "2";
+-# "AUTH_TIMEOUT" = "9";
++"AUTH_TIMEOUT" = "1";
+ # "IPCHECK_CLONE_LIMIT" = "4";
+ # "IPCHECK_CLONE_PERIOD" = "40";
+ # "IPCHECK_CLONE_DELAY" = "600";
