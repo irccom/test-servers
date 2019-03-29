@@ -31,8 +31,11 @@ $ docker run --rm -it -p 4445:4445 -p 5555:5555 irccom/ngircd:latest
 # ircd-ratbox - port 4446
 $ docker run --rm -it -p 4446:4446 -p 5556:5556 irccom/ircd-ratbox:latest
 
-# charybdis - port 4447
+# Charybdis - port 4447
 $ docker run --rm -it -p 4447:4447 -p 5557:5557 irccom/charybdis:latest
+
+# InspIRCd - port 4448
+$ docker run --rm -it -p 4448:4448 -p 5558:5558 irccom/inspircd:latest
 ```
 
 -----
