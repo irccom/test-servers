@@ -28,8 +28,11 @@ $ docker run --rm -it -p 4444:4444 -p 5554:5554 irccom/bahamut:latest
 # ngIRCd - port 4445
 $ docker run --rm -it -p 4445:4445 -p 5555:5555 irccom/ngircd:latest
 
-# ircd-ratbox - port 4445
+# ircd-ratbox - port 4446
 $ docker run --rm -it -p 4446:4446 -p 5556:5556 irccom/ircd-ratbox:latest
+
+# charybdis - port 4447
+$ docker run --rm -it -p 4447:4447 -p 5557:5557 irccom/charybdis:latest
 ```
 
 -----
@@ -41,3 +44,4 @@ On these images:
 - As much as possible uses the default config (we may enable features though).
 - The MOTD is just "This is the MOTD"
 - Throttling / connection limits are disabled.
+- Port 44xx is plaintext, 55xx is TLS, 66xx is websockets.
