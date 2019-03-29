@@ -27,6 +27,9 @@ $ docker run --rm -it -p 4444:4444 -p 5554:5554 irccom/bahamut:latest
 
 # ngIRCd - port 4445
 $ docker run --rm -it -p 4445:4445 -p 5555:5555 irccom/ngircd:latest
+
+# ircd-ratbox - port 4445
+$ docker run --rm -it -p 4446:4446 -p 5556:5556 irccom/ircd-ratbox:latest
 ```
 
 -----
