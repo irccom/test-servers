@@ -1,0 +1,438 @@
+diff --git a/example.conf.old b/example.conf
+index fb844ce..bc1bfe6 100755
+--- a/example.conf.old
++++ b/example.conf
+@@ -44,7 +44,7 @@
+  /* serverinfo {}:  Contains information about the server. (OLD M:) */
+ serverinfo {
+ 	/* name: the name of our server */
+-	name = "hades.arpa";
++	name = "ratbox.example.irc.com";
+ 
+ 	/* sid: the unique server id of our server.  This must be three
+ 	 * characters long.  The first character must be a digit [0-9], the
+@@ -57,13 +57,13 @@ serverinfo {
+ 	/* description: the description of our server.  '[' and ']' may not
+ 	 * be used here for compatibility with older servers.
+ 	 */
+-	description = "ircd-ratbox test server";
++	description = "Client Server";
+ 
+ 	/* network info: the name and description of the network this server
+ 	 * is on.  Shown in the 005 reply and used with serverhiding.
+ 	 */
+-	network_name = "MyNet";
+-	network_desc = "This is My Network";
++	network_name = "ExampleNet";
++	network_desc = "The Example Network";
+ 
+ 	/* hub: allow this server to act as a hub and have multiple servers
+ 	 * connected to it.  
+@@ -98,13 +98,13 @@ serverinfo {
+ 	default_max_clients = 10000;
+ 
+ 	/* ssl_private_key: our ssl private key */
+-	ssl_private_key = "etc/test.key";
++	ssl_private_key = "etc/ircd.key";
+ 
+ 	/* ssl_cert: certificate for our ssl server */
+-	ssl_cert = "etc/test.cert";
++	ssl_cert = "etc/ircd.crt";
+ 
+ 	/* ssl_dh_params: DH parameters, generate with openssl dhparam -out dh.pem 1024 */
+-	ssl_dh_params = "etc/dh.pem";
++	# ssl_dh_params = "etc/dh.pem";
+ 
+ 	/* ssld_count: number of ssld processes you want to start, if you
+ 	 * have a really busy server, using N-1 where N is the number of
+@@ -120,9 +120,9 @@ serverinfo {
+ 
+ /* admin {}: contains admin information about the server. (OLD A:) */
+ admin {
+-	name = "Smurf target";
++	name = "Dan";
+ 	description = "Main Server Administrator";
+-	email = "<syn@packets.r.us>";
++	email = "<daniel@example.com>";
+ };
+ 
+ /* log {}: contains information about logfiles. */
+@@ -167,16 +167,16 @@ class "users" {
+ 	 * allowed to connect.  Unidented connections are classified as
+ 	 * the same ident.
+ 	 */
+-	number_per_ident = 2;
++	number_per_ident = 2000;
+ 
+ 	/* number per ip: the number of local users per host allowed */
+-	number_per_ip = 3;
++	number_per_ip = 3000;
+ 
+ 	/* number per ip global: the number of network wide connections
+ 	 * per host allowed for a user, including connections to the
+ 	 * local server.
+ 	 */
+-	number_per_ip_global = 5;
++	number_per_ip_global = 5000;
+ 
+ 	/* cidr_ipv4_bitlen:  Limits numbers of connections from a subnet size
+ 	 */
+@@ -194,7 +194,7 @@ class "users" {
+ 	number_per_cidr = 4;
+ 
+ 	/* max number: the maximum number of users allowed in this class */
+-	max_number = 100;
++	max_number = 1000;
+ 
+ 	/* sendq: the amount of data allowed in a clients queue before
+ 	 * they are dropped.
+@@ -211,8 +211,8 @@ class "restricted" {
+ 
+ class "opers" {
+ 	ping_time = 5 minutes;
+-	number_per_ip = 10;
+-	max_number = 100;
++	number_per_ip = 100;
++	max_number = 1000;
+ 	sendq = 100kbytes;
+ };
+ 
+@@ -245,88 +245,17 @@ listen {
+ 	aftype = ipv4;
+ 
+ 	/* port: listen on all available IPs, ports 5000 and 6665 to 6669 */
+-	port = 5000, 6665 .. 6669;
+-
+-	/* listen on :: on port 7003 */
+-	aftype = ipv6;
+-	port = 7003;
+-
+-	/* host: set a specific IP/host the ports after the line will listen 
+-	 * on.  This may be ipv4 or ipv6.
+-	 */
+-	host = "1.2.3.4";
+-	port = 7000, 7001;
+-
+-	host = "3ffe:1234:a:b:c::d";
+-	port = 7002;
++	port = 4446;
+ 
+ 	/* sslport sets up an SSL/TLS listener, otherwise it acts just like
+ 	 * the port option above
+ 	 */
+-	sslport = 9999;
+-};
+-
+-/* auth {}: allow users to connect to the ircd (OLD I:) */
+-auth {
+-	/* user: the user@host allowed to connect.  multiple IPv4/IPv6 user 
+-	 * lines are permitted per auth block.
+-	 */
+-	user = "*@172.16.0.0/12";
+-	user = "*test@123D:B567:*";
+-
+-	/* password: an optional password that is required to use this block.
+-	 * By default this is not encrypted, specify the flag "encrypted" in
+-	 * flags = ...; below if it is.
+-	 */
+-	password = "letmein";
+-
+-	/* spoof: fake the users user@host to be be this.  You may either
+-	 * specify a host or a user@host to spoof to.  This is free-form,
+-	 * just do everyone a favour and dont abuse it. (OLD I: = flag)
+-	 */
+-	spoof = "I.still.hate.packets";
+-
+-	/* Possible flags in auth:
+-	 * 
+-	 * encrypted                  | password is encrypted with ratbox-mkpasswd
+-	 * spoof_notice               | give a notice when spoofing hosts
+-	 * exceed_limit (old > flag)  | allow user to exceed class user limits
+-	 * kline_exempt (old ^ flag)  | exempt this user from k/g/xlines
+-	 * gline_exempt (old _ flag)  | exempt this user from glines
+-	 * spambot_exempt	          | exempt this user from spambot checks
+-	 * shide_exempt		          | exempt this user from serverhiding
+-	 * jupe_exempt                | exempt this user from generating
+-	 *                              warnings joining juped channels
+-	 * resv_exempt                | exempt this user from resvs
+-	 * flood_exempt               | exempt this user from flood limits
+-	 *                              USE WITH CAUTION.
+-	 * no_tilde     (old - flag)  | don't prefix ~ to username if no ident
+-	 * need_ident   (old + flag)  | require ident for user in this class
+-	 * need_ssl	                  | a SSL/TLS connection is required for 
+-	 *                              this auth
+-	 */
+-	flags = kline_exempt, exceed_limit;
+-
+-	/* class: the class the user is placed in */
+-	class = "opers";
+-};
+-
+-auth {
+-	/* redirect: the server and port to redirect a user to.  A user does
+-	 * not have to obey the redirection, the ircd just suggests to them
+-	 * an alternative server.
+-	 */
+-	redirserv = "irc.fi";
+-	redirport = 6667;
+-
+-	user = "*.fi";
+-
+-	/* class: a class is required even though it is not used */
+-	class = "users";
++	sslport = 5556;
+ };
+ 
+ auth {
+ 	user = "*@*";
++	flags = exceed_limit, spambot_exempt, flood_exempt;
+ 	class = "users";
+ };
+ 
+@@ -334,21 +263,20 @@ auth {
+  * ircd-ratbox no longer supports local operators, privileges are
+  * controlled via flags.
+  */
+-operator "god" {
++operator "alice" {
+ 	/* name: the name of the oper must go above */
+ 
+ 	/* user: the user@host required for this operator.  CIDR *is*
+ 	 * supported now.
+ 	 * multiple user="" lines are supported.
+ 	 */
+-	user = "*god@*";
+-	user = "*@127.0.0.1";
++	user = "*@*";
+ 
+ 	/* password: the password required to oper.  Unless ~encrypted is
+ 	 * contained in flags = ...; this will need to be encrypted using 
+ 	 * ratbox-mkpasswd, MD5 is supported
+ 	 */
+-	password = "etcnjl8juSU1E";
++	password = "password";
+ 
+ 	/* rsa key: the public key for this oper when using Challenge.
+ 	 * A password should not be defined when this is used, see 
+@@ -398,172 +326,17 @@ operator "god" {
+ 	 * need_ssl:     oper must be connected via SSL/TLS to oper up
+ 	 *               
+ 	 */
+-	flags = global_kill, remote, kline, unkline, gline,
++	flags = ~encrypted, global_kill, remote, kline, unkline, gline,
+ 	        die, rehash, admin, xline, resv, operwall;
+ };
+ 
+-/* connect {}: controls servers we connect to (OLD C:, N:, H:, L:) */
+-connect "irc.uplink.com" {
+-	/* the name must go above */
+-
+-	/* host: the host or IP to connect to.  If a hostname is used it
+-	 * must match the reverse dns of the server.
+-	 */
+-	host = "192.168.0.1";
+-
+-	/* vhost: the host or IP to bind to for this connection.  If this
+-	 * is not specified, the default vhost (in serverinfo {}) is used.
+-	 */
+-	#vhost = "192.168.0.50";
+-
+-	/* passwords: the passwords we send (OLD C:) and accept (OLD N:).
+-	 * The remote server will have these passwords reversed.
+-	 */
+-	send_password = "password";
+-	accept_password = "anotherpassword";
+-
+-	/* port: the port to connect to this server on */
+-	port = 6666;
+-
+-	/* hub mask: the mask of servers that this server may hub. Multiple
+-	 * entries are permitted
+-	 */
+-	hub_mask = "*";
+-
+-	/* leaf mask: the mask of servers this server may not hub.  Multiple
+-	 * entries are permitted.  Useful for forbidding EU -> US -> EU routes.
+-	 */
+-	#leaf_mask = "*.uk";
+-
+-	/* class: the class this server is in */
+-	class = "server";
+-
+-	/* flags: controls special options for this server
+-	 * encrypted  - marks the accept_password as being crypt()'d
+-	 * autoconn   - automatically connect to this server
+-	 * compressed - compress traffic via ziplinks
+-	 * topicburst - burst topics between servers
+-	 * ssl        - ssl/tls encrypted server connections
+-	 */
+-	flags = compressed, topicburst;
+-};
+-
+-connect "ipv6.some.server" {
+-	 host = "3ffd:dead:beef::1";
+-	 send_password = "password";
+-	 accept_password = "password";
+-	 port = 6666;
+-
+-	/* aftype: controls whether the connection uses "ipv4" or "ipv6".
+-	 * Default is ipv4.
+-	 */
+-	aftype = ipv6;
+-	class = "server";
+-};
+-
+-/* cluster {}; servers that we propagate things to automatically.
+- * NOTE: This does NOT grant them privileges to apply anything locally,
+- *       you must add a seperate shared block for that.  Clustering will
+- *       only be done for actions by LOCAL opers, that arent directed
+- *       remotely.
+- */
+-cluster {
+-	/* name: the server to share with, this can be a wildcard and may be
+-	 * stacked.
+-	 */
+-	/* flags: list of what to share, all the name lines above this (up
+-	 * until another flags entry) will receive these flags.
+-	 *
+-	 *    kline   - share perm klines
+-	 *    tkline  - share temp klines
+-	 *    unkline - share unklines
+-	 *    locops  - share locops
+-	 *    xline   - share perm xlines
+-	 *    txline  - share temp xlines
+-	 *    unxline - share unxlines
+-	 *    resv    - share perm resvs
+-	 *    tresv   - share temp resvs
+-	 *    unresv  - share unresvs
+-	 *    all     - share all of the above
+-	 */
+-
+-	/* share klines/unklines/xlines with *.lan */
+-	name = "*.lan";
+-	flags = kline, unkline, xline;
+-
+-	/* share locops with irc.ircd-ratbox.org and ircd.ircd-ratbox.org */
+-	name = "irc.ircd-ratbox.org";
+-	name = "ircd.ircd-ratbox.org";
+-	flags = locops;
+-};
+-
+-/* If you are using the ratbox-services compatibility code, uncomment this. */
+-/* service{}: privileged servers (services). These servers have extra
+- * privileges such as setting login names on users and introducing clients
+- * with umode +S (unkickable). This does not allow them to set bans, you
+- * need a separate shared{} for that.
+- * Do not place normal servers here.
+- * There may be only one service{} block.
+- */
+-#service {
+-#	/* name: the server name. These may be stacked. */
+-#	name = "ratbox.services";
+-#};
+-
+-/* shared {}: users that are allowed to place remote bans on our server.
+- * NOTE: These are ordered top down.  The first one the user@host and server
+- *       matches will be used.  Their access will then be decided on that
+- *       block and will not fall back to another block that matches.
+- */
+-shared {
+-	/* oper: the user@host and server the user must be on to set klines.
+-	 * The first field must be a user@host, the second field is an
+-	 * optional server.  These may be stacked.
+-	 */
+-
+-	/* flags: list of what to allow them to place, all the oper lines
+-	 * above this (up until another flags entry) will receive these
+-	 * flags.  This *must* be present.
+-	 *
+-	 *    kline   - allow setting perm/temp klines
+-	 *    tkline  - allow setting temp klines
+-	 *    unkline - allow removing klines
+-	 *    xline   - allow setting perm/temp xlines
+-	 *    txline  - allow setting temp xlines
+-	 *    unxline - allow removing xlines
+-	 *    resv    - allow setting perm/temp resvs
+-	 *    tresv   - allow setting temp resvs
+-	 *    unresv  - allow removing xlines
+-	 *    all     - allow oper/server to do all of above.
+-	 *    locops  - allow locops - only used for servers who cluster
+-	 *    none    - disallow everything
+-	 */
+-
+-	/* allow flame@*.leeh.co.uk on server irc.ircd-ratbox.org and
+-	 * allow leeh@*.leeh.co.uk on server ircd.ircd-ratbox.org to kline
+-	 */
+-	oper = "flame@*.leeh.co.uk", "irc.ircd-ratbox.org";
+-	oper = "leeh@*.leeh.co.uk", "ircd.ircd-ratbox.org";
+-	flags = kline;
+-
+-	/* you may forbid certain opers/servers from doing anything */
+-	oper = "irc@vanity.oper", "*";
+-	oper = "*@*", "irc.vanity.server";
+-	oper = "irc@another.vanity.oper", "bigger.vanity.server";
+-	flags = none;
+-
+-	/* or allow everyone to place temp klines */
+-	oper = "*@*";
+-	flags = tkline;
+-};
++operator "daniel" {
++	user = "*@*";
+ 
+-/* exempt {}: IPs that are exempt from deny {} and Dlines. (OLD d:) */
+-exempt {
+-	ip = "192.168.0.0/16";
++	password = "password";
+ 
+-	/* these may be stacked */
+-	ip = "127.0.0.1";
+-	ip = "10.0.0.0/8";
++	flags = ~encrypted, global_kill, remote, kline, unkline, gline,
++	        die, rehash, admin, xline, resv, operwall;
+ };
+ 
+ /* The channel block contains options pertaining to channels */
+@@ -639,7 +412,7 @@ channel {
+ 	/* use_sslonly: enables the use of channel mode +S which enforces 
+ 	 * that users be one ssl/tls enabled connections
+ 	 */
+-	use_sslonly = no;
++	use_sslonly = yes;
+ 
+ 	/* topiclen: length of topics */
+ 	topiclen = 160;
+@@ -911,9 +684,6 @@ general {
+ 	global_cidr_ipv6_count = 128;
+ 	global_cidr = yes;
+ 
+-	/* REMOVE ME.  The following line checks you've been reading. */
+-	havent_read_conf = yes;
+-
+ 	/* max targets: the maximum amount of targets in a single 
+ 	 * PRIVMSG/NOTICE.  set to 999 NOT 0 for unlimited.
+ 	 */
+@@ -1006,19 +776,19 @@ general {
+ 	/* throttle_duration: Amount of time that throttling will be applied to an IP
+ 	 * address.
+ 	 */
+-	throttle_duration = 60;
++	throttle_duration = 0;
+ 
+ 	/* throttle_count: Number of connections within throttle_duration that it takes
+ 	 * for throttling to take effect */
+-	throttle_count = 4;
++	throttle_count = 10000;
+ };
+ 
+ modules {
+ 	/* module path: paths to search for modules specified below and 
+ 	 * in /modload.
+ 	 */
+-	path = "/usr/local/ircd/modules";
+-	path = "/usr/local/ircd/modules/autoload";
++	path = "/ircd-bin/modules";
++	path = "/ircd-bin/modules/autoload";
+ 
+ 	/* module: the name of a module to load on startup/rehash */
+ 	#module = "some_module.so";
