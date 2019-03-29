@@ -1,0 +1,52 @@
+version: '3'
+services:
+  ircd-irc2:
+    image: "irccom/ircd-irc2:latest"
+    ports:
+     - "4440:4440"
+     - "5550:5550"
+  unreal4:
+    image: "irccom/unreal4:latest"
+    ports:
+     - "4441:4441"
+     - "5551:5551"
+  ircd-hybrid:
+    image: "irccom/ircd-hybrid:latest"
+    ports:
+     - "4442:4442"
+     - "5552:5552"
+  ircu2:
+    image: "irccom/ircu2:latest"
+    ports:
+     - "4443:4443"
+     - "5553:5553"
+  bahamut:
+    image: "irccom/bahamut:latest"
+    ports:
+     - "4444:4444"
+     - "5554:5554"
+  ngircd:
+    image: "irccom/ngircd:latest"
+    ports:
+     - "4445:4445"
+     - "5555:5555"
+  ircd-ratbox:
+    image: "irccom/ircd-ratbox:latest"
+    ports:
+     - "4446:4446"
+     - "5556:5556"
+  charybdis:
+    image: "irccom/charybdis:latest"
+    ports:
+     - "4447:4447"
+     - "5557:5557"
+  inspircd:
+    image: "irccom/inspircd:latest"
+    ports:
+     - "4448:4448"
+     - "5558:5558"
+  # ircd-seven:
+  #   image: "irccom/ircd-seven:latest"
+  #   ports:
+  #    - "4449:4449"
+  #    - "5559:5559"

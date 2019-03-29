@@ -38,6 +38,16 @@ $ docker run --rm -it -p 4447:4447 -p 5557:5557 irccom/charybdis:latest
 $ docker run --rm -it -p 4448:4448 -p 5558:5558 irccom/inspircd:latest
 ```
 
+Or, to start all of these images at once, `cd` to the directory with our [docker-compose.yml file](docker-compose.yml) and run these commands:
+
+```sh
+# start the servers
+docker-compose up -d
+
+# stop the servers
+docker-compose down
+```
+
 -----
 
 On these images:
