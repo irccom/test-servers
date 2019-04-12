@@ -1,3 +1,17 @@
+diff --git a/config.h.in b/config.h.in
+index 7c2c7892..1fc3c2e3 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -6,6 +6,9 @@
+ /* Configuration file name */
+ #undef CPATH
+ 
++/* Disable throttling */
++#define NOTHROTTLE
++
+ /* Enable debugging code */
+ #undef DEBUGMODE
+ 
 diff --git a/doc/example.conf b/doc/example.conf
 index 661edd0b..309d9373 100644
 --- a/doc/example.conf
