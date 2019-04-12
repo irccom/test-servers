@@ -1,5 +1,5 @@
 diff --git a/doc/reference.conf b/doc/reference.conf
-index 3ba3f70..a665010 100755
+index 3ba3f70..98f5377 100755
 --- a/doc/reference.conf
 +++ b/doc/reference.conf
 @@ -52,8 +52,8 @@
@@ -35,6 +35,17 @@ index 3ba3f70..a665010 100755
      services_name   services.name;  # IRC name of services server
      stats_name      stats.name;     # IRC name of stats server
      staff_address   staff.net;      # Opermask hostname
+@@ -121,8 +121,8 @@ options {
+     maxchannels     10;             # Max chans user can join
+     ts_max_delta    300;            # Maximum timestamp delta
+     ts_warn_delta   30;             # Warn for TS deltas larger than this
+-    local_clones    1:15;           # Default maximum local IP:site clones
+-    global_clones   3:30;           # Default maximum global IP:site clones
++    local_clones    10000:10000;           # Default maximum local IP:site clones
++    global_clones   10000:10000;           # Default maximum global IP:site clones
+     crypt_oper_pass;                # Encrypted passwords in Oper blocks
+     short_motd;                     # Use ircd.smotd
+     show_links;                     # Show real LINKS output
 @@ -222,12 +222,13 @@ options {
  
  port {
@@ -59,7 +70,7 @@ index 3ba3f70..a665010 100755
      name        users;      # Name of the class
      pingfreq    90;         # PING idle connection every N seconds
      maxsendq    100000;     # Send buffer limit
-+    maxusers    1000;       # Maximum number of clients
++    maxusers    10000;       # Maximum number of clients
 +};
  
 -    // optional, for Allow classes only:
@@ -75,7 +86,7 @@ index 3ba3f70..a665010 100755
 +    name        opers;      # Name of the class
 +    pingfreq    90;         # PING idle connection every N seconds
 +    maxsendq    100000;     # Send buffer limit
-+    maxusers    1000;       # Maximum number of clients
++    maxusers    10000;       # Maximum number of clients
  };
  
  # Idle connections are polled with the PING command every pingfreq seconds.
@@ -175,3 +186,16 @@ index 3ba3f70..a665010 100755
  
  # The path token specifies the directory to search for modules in, relative
  # to the ircd directory.  There can only be one path, and the default is
+diff --git a/include/config.h b/include/config.h
+index 06f79d8..be638e3 100644
+--- a/include/config.h
++++ b/include/config.h
+@@ -126,7 +126,7 @@
+  */
+ #define HIDEULINEDSERVS 1
+ 
+-#define THROTTLE_ENABLE /* enable throttling, see below */
++// #define THROTTLE_ENABLE /* enable throttling, see below */
+ 
+ /*
+  * RWHO_PROBABILITY
