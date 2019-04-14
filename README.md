@@ -3,7 +3,7 @@ This is a collection of Docker images to help us test while writing documentatio
 
 **These images/containers are not meant to be secure or easily-configurable. They are meant to be easy to test. They use hardcoded credentials and default configs.** If you are running a real network, use other images and builds of these servers.
 
-The companion repo to this one is [irccom/test-framework](https://github.com/irccom/test-framework), a collection of scripts that we use to test particular commands and functions across a range of servers.
+The companion repo to this one is [irccom/script-runner](https://github.com/irccom/script-runner), a collection of scripts that we use to test particular commands and functions across a range of servers.
 
 -----
 
