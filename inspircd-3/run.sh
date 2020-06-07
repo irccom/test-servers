@@ -4,9 +4,9 @@
 cd /ircd-bin
 
 # run!
-/ircd-bin/inspircd start
+/ircd-bin/inspircd start #--debug
 
-touch a
-tail -fn0 a
+touch junk/a
+tail -fn0 junk/a
 
 /ircd-bin/inspircd stop

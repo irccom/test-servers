@@ -10,7 +10,7 @@ WORKDIR /
 RUN git clone https://github.com/inspircd/inspircd.git ircd-src
 WORKDIR /ircd-src
 # get latest
-RUN git checkout 0b66cad1b04c104f3afb75cafd23faf4cb527a49
+RUN git checkout 31815ed
 
 # make temp ircd user because ~insp needs it to build~
 # even though it's not gonna be run on this machine
@@ -62,7 +62,10 @@ COPY --from=build-env /ircd-bin /ircd-bin
 RUN adduser -D -g '' ircd
 RUN chown -R ircd /ircd-bin/data
 RUN chgrp -R ircd /ircd-bin/data
+RUN mkdir -p /ircd-bin/junk
+RUN chown -R ircd /ircd-bin/junk
+RUN chgrp -R ircd /ircd-bin/junk
 
 # launch
 WORKDIR /ircd-bin
-ENTRYPOINT ["/ircd-bin/run.sh"]
+ENTRYPOINT ["su", "-", "ircd", "-c", "/ircd-bin/run.sh"]
